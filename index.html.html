@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sietch Command Center — Questionário Duratto | Etapa 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan:       #0099B5;
+    --cyan-light: #E6F7FA;
+    --cyan-mid:   #B3E8F2;
+    --navy:       #0A0A41;
+    --navy-dim:   rgba(10,10,65,0.06);
+    --text:       #1A1A2E;
+    --text-mid:   #4A4A6A;
+    --text-light: #8888AA;
+    --border:     #D8D8E8;
+    --border-focus: #0099B5;
+    --bg:         #F7F8FC;
+    --white:      #FFFFFF;
+    --success:    #00875A;
+    --warning:    #B06000;
+    --danger:     #C0002A;
+    --card-shadow: 0 2px 12px rgba(10,10,65,0.07);
+    --radius:     8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TOP STRIP ── */
+  .top-strip {
+    height: 4px;
+    background: linear-gradient(90deg, var(--navy), var(--cyan));
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+  }
+
+  .header-brand { display: flex; align-items: center; gap: 14px; }
+
+  .brand-mark {
+    width: 36px; height: 36px;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+  }
+
+  .brand-mark svg { width: 18px; height: 18px; fill: #00E7FF; }
+
+  .brand-text {}
+  .brand-name {
+    font-family: 'Michroma', sans-serif;
+    font-size: 12px;
+    color: var(--navy);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .brand-sub {
+    font-size: 10px;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    margin-top: 1px;
+  }
+
+  .header-right {
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .autosave-pill {
+    font-size: 11px;
+    color: var(--success);
+    background: #E6FAF3;
+    padding: 4px 10px;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    letter-spacing: 0.3px;
+  }
+  .autosave-pill.visible { opacity: 1; }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    height: 3px;
+    background: var(--border);
+    position: relative;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--cyan), #00C4E8);
+    transition: width 0.5s ease;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── LANDING ── */
+  .landing {
+    max-width: 560px;
+    margin: 60px auto;
+    padding: 0 24px;
+    animation: fadeUp 0.4s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .landing-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 40px 36px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .landing-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .landing-title {
+    font-family: 'Michroma', sans-serif;
+    font-size: 22px;
+    color: var(--navy);
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+
+  .landing-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .info-list {
+    list-style: none;
+    margin-bottom: 28px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .info-list li {
+    font-size: 12px;
+    color: var(--text-mid);
+    display: flex; align-items: flex-start; gap: 8px;
+    line-height: 1.5;
+  }
+
+  .info-list li .icon {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--cyan-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .field-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .select-respondent {
+    width: 100%;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 11px 14px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888AA' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .select-respondent:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(0,153,181,0.12); }
+
+  .btn-start {
+    width: 100%;
+    margin-top: 20px;
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 13px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-start:hover { background: #14146A; }
+  .btn-start:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
+
+  .landing-note {
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--text-light);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* ── QUESTIONNAIRE ── */
+  .questionnaire {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    animation: fadeUp 0.3s ease;
+  }
+
+  /* RESPONDENT CARD */
+  .respondent-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .respondent-avatar {
+    width: 48px; height: 48px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Michroma', sans-serif;
+    font-size: 14px;
+    color: #00E7FF;
+    flex-shrink: 0;
+    letter-spacing: 1px;
+  }
+
+  .respondent-info { flex: 1; }
+  .respondent-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .respondent-role { font-size: 12px; color: var(--text-mid); }
+  .respondent-area {
+    font-size: 11px;
+    color: var(--cyan);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+
+  .progress-label {
+    text-align: right;
+    font-size: 11px;
+    color: var(--text-light);
+  }
+  .progress-count {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  /* CONTEXT */
+  .context-block {
+    background: var(--cyan-light);
+    border: 1px solid var(--cyan-mid);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-mid);
+  }
+  .context-block strong {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* QUESTIONS */
+  .section-heading {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .q-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  }
+
+  .q-card:hover { border-color: var(--cyan-mid); }
+  .q-card.answered { border-color: var(--cyan); background: #FAFEFF; }
+  .q-card.answered { box-shadow: 0 1px 8px rgba(0,153,181,0.08); }
+
+  .q-head {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .q-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cyan);
+    min-width: 24px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .q-body { flex: 1; }
+
+  .q-theme {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 5px;
+  }
+
+  .q-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .q-status {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .q-card.answered .q-status {
+    background: var(--cyan);
+    border-color: var(--cyan);
+  }
+
+  .q-status-check {
+    display: none;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .q-card.answered .q-status-check { display: block; }
+
+  .q-textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.65;
+    padding: 11px 14px;
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .q-textarea:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(0,153,181,0.1);
+    background: var(--white);
+  }
+
+  .q-textarea::placeholder { color: var(--text-light); }
+
+  /* PROGRESS DOTS */
+  .dots-row {
+    display: flex; gap: 6px; align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.25s;
+  }
+
+  .dot.filled { background: var(--cyan); }
+
+  /* FREE NOTES */
+  .free-notes-section {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-top: 8px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  }
+
+  .free-notes-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-mid);
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .free-notes-area {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.65;
+    padding: 11px 14px;
+    resize: vertical;
+    min-height: 100px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .free-notes-area:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(0,153,181,0.1);
+    background: var(--white);
+  }
+
+  .free-notes-area::placeholder { color: var(--text-light); }
+
+  /* COMPLETION BANNER */
+  .completion-banner {
+    background: #E6FAF3;
+    border: 1.5px solid #A3DFC6;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    color: var(--success);
+    font-weight: 500;
+  }
+
+  .completion-banner.visible { display: flex; }
+  .completion-icon { font-size: 20px; flex-shrink: 0; }
+
+  /* ACTION BUTTONS */
+  .action-row {
+    display: flex; gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-export {
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-export:hover { background: #14146A; }
+
+  .btn-secondary {
+    background: var(--white);
+    color: var(--text-mid);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 20px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  /* DONE PAGE */
+  .done-page {
+    max-width: 560px;
+    margin: 80px auto;
+    padding: 0 24px;
+    text-align: center;
+    animation: fadeUp 0.4s ease;
+  }
+
+  .done-icon {
+    width: 72px; height: 72px;
+    background: #E6FAF3;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 24px;
+  }
+
+  .done-title {
+    font-family: 'Michroma', sans-serif;
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+
+  .done-desc {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .done-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    text-align: left;
+    box-shadow: var(--card-shadow);
+  }
+
+  .done-card-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 14px;
+  }
+
+  .done-actions { display: flex; flex-direction: column; gap: 10px; }
+
+  .btn-done {
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 13px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+
+  .btn-done:hover { background: #14146A; }
+
+  .btn-done-outline {
+    background: var(--white);
+    color: var(--text-mid);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 13px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .btn-done-outline:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  .back-btn {
+    background: none;
+    border: none;
+    color: var(--cyan);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 6px 0;
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 20px;
+  }
+  .back-btn:hover { text-decoration: underline; }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--white);
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: auto;
+  }
+
+  .footer-brand {
+    font-family: 'Michroma', sans-serif;
+    font-size: 10px;
+    color: var(--navy);
+    letter-spacing: 1px;
+  }
+
+  /* CHAR COUNTER */
+  .char-hint {
+    font-size: 10px;
+    color: var(--text-light);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .header { padding: 14px 18px; }
+    .landing-card { padding: 28px 22px; }
+    .questionnaire { padding: 28px 16px 60px; }
+    .respondent-card { padding: 16px 18px; flex-wrap: wrap; }
+    .landing-title { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP STRIP -->
+<div class="top-strip"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 20 20"><polygon points="10,2 18,8 15,18 5,18 2,8"/></svg>
+    </div>
+    <div class="brand-text">
+      <div class="brand-name">Sietch Command Center</div>
+      <div class="brand-sub">Duratto · Levantamento de Requisitos · Etapa 2</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="autosave-pill" id="autosavePill">✓ Salvo</div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+</div>
+
+<!-- ── PAGE: LANDING ── -->
+<div class="page active" id="pageLanding">
+  <div class="landing">
+    <div class="landing-card">
+      <div class="landing-eyebrow">Levantamento de Requisitos · Etapa 2</div>
+      <div class="landing-title">Perguntas de<br>Aprofundamento</div>
+      <p class="landing-desc">
+        Olá! Este questionário foi preparado especificamente para você, com base nas respostas da Etapa 1.
+        Por favor, responda com o máximo de detalhe possível — suas respostas vão diretamente guiar
+        a configuração do novo sistema.
+      </p>
+
+      <ul class="info-list">
+        <li>
+          <span class="icon">🕐</span>
+          <span>Tempo estimado de <strong>15 a 20 minutos</strong> para responder.</span>
+        </li>
+        <li>
+          <span class="icon">💾</span>
+          <span>Suas respostas são <strong>salvas automaticamente</strong> neste dispositivo. Você pode fechar e retomar depois.</span>
+        </li>
+        <li>
+          <span class="icon">📄</span>
+          <span>Ao terminar, você poderá <strong>gerar um arquivo .txt</strong> para enviar ao time Sietch.</span>
+        </li>
+        <li>
+          <span class="icon">🔒</span>
+          <span>Não há respostas certas ou erradas. Seja direto e honesto sobre como o processo funciona hoje.</span>
+        </li>
+      </ul>
+
+      <label class="field-label">Selecione seu nome</label>
+      <select class="select-respondent" id="selectRespondent" onchange="onSelectChange()">
+        <option value="">— Escolha seu nome —</option>
+      </select>
+
+      <button class="btn-start" id="btnStart" onclick="startQuestionnaire()" disabled>
+        Iniciar questionário →
+      </button>
+
+      <p class="landing-note">
+        Maio 2026 · Sietch Tecnologias<br>
+        Em caso de dúvida, entre em contato: leandro.zanardi@sietch.tech
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: QUESTIONNAIRE ── -->
+<div class="page" id="pageQuestionnaire">
+  <div class="questionnaire">
+
+    <button class="back-btn" onclick="goBack()">← Trocar respondente</button>
+
+    <!-- RESPONDENT CARD -->
+    <div class="respondent-card">
+      <div class="respondent-avatar" id="qAvatar"></div>
+      <div class="respondent-info">
+        <div class="respondent-name" id="qName"></div>
+        <div class="respondent-role" id="qRole"></div>
+        <div class="respondent-area" id="qArea"></div>
+      </div>
+      <div class="progress-label">
+        <div class="progress-count" id="qProgressCount">0</div>
+        <div>de <span id="qProgressTotal"></span> respondidas</div>
+      </div>
+    </div>
+
+    <!-- DOTS -->
+    <div class="dots-row" id="qDots"></div>
+
+    <!-- CONTEXT -->
+    <div class="context-block">
+      <strong>Contexto desta entrevista</strong>
+      <span id="qContext"></span>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="section-heading">
+      Perguntas de aprofundamento
+      <span id="qSectionCount" style="font-weight:400;letter-spacing:0"></span>
+    </div>
+
+    <div id="qCards"></div>
+
+    <!-- FREE NOTES -->
+    <div class="free-notes-section">
+      <div class="free-notes-label">
+        📝 Observações adicionais
+      </div>
+      <textarea
+        class="free-notes-area"
+        id="freeNotes"
+        placeholder="Algum ponto adicional que não foi coberto pelas perguntas acima? Comentários, preocupações ou sugestões são bem-vindos..."
+        oninput="handleNotesChange(this.value)"
+      ></textarea>
+    </div>
+
+    <!-- COMPLETION BANNER -->
+    <div class="completion-banner" id="completionBanner">
+      <span class="completion-icon">🎉</span>
+      <div>
+        <strong>Todas as perguntas respondidas!</strong><br>
+        <span style="font-weight:400;font-size:12px">Clique em "Gerar arquivo" abaixo para exportar suas respostas.</span>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="action-row">
+      <button class="btn-export" onclick="exportAndFinish()">
+        ↓ &nbsp;Gerar arquivo .txt
+      </button>
+      <button class="btn-secondary" onclick="exportAndFinish()">
+        Finalizar e exportar
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── PAGE: DONE ── -->
+<div class="page" id="pageDone">
+  <div class="done-page">
+    <div class="done-icon">✅</div>
+    <div class="done-title">Obrigado!</div>
+    <p class="done-desc" id="doneDesc">
+      Suas respostas foram exportadas com sucesso. Por favor, envie o arquivo gerado para o time Sietch.
+    </p>
+
+    <div class="done-card">
+      <div class="done-card-label">Próximos passos</div>
+      <div class="done-actions">
+        <button class="btn-done" onclick="exportTXT()">⬇ Baixar novamente o arquivo .txt</button>
+        <button class="btn-done-outline" onclick="goBackToQuestionnaire()">← Voltar e editar respostas</button>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:var(--text-light);margin-top:8px">
+      Dúvidas? Entre em contato:<br>
+      <a href="mailto:leandro.zanardi@sietch.tech" style="color:var(--cyan)">leandro.zanardi@sietch.tech</a>
+    </p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-brand">SIETCH TECNOLOGIAS</div>
+  <div>Duratto · Levantamento de Requisitos · Maio 2026</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+const respondents = [
+  {
+    id: 'kamila',
+    name: 'Kamila Ramos',
+    role: 'Supervisora de Vendas',
+    area: 'Televendas',
+    email: 'kamila@duratto.com.br',
+    context: 'Você supervisiona as 4 vendedoras de televendas, gerenciando carteiras fixas, metas, leads, SAC e aprovações de exceções. As perguntas abaixo buscam entender melhor como esses processos funcionam hoje.',
+    questions: [
+      { theme: 'KPIs Atuais', text: 'Como você mede os KPIs de cada vendedora hoje? Qual sistema ou planilha usa? Quais indicadores são mais críticos para você?' },
+      { theme: 'Dashboard em Tempo Real', text: 'Se você tivesse acesso a um painel atualizado em tempo real, quais seriam os 5 indicadores que você verificaria todos os dias?' },
+      { theme: 'Vendas Compartilhadas', text: 'Como funciona o controle na planilha de vendas compartilhadas? Com que frequência há divergências na apuração da comissão?' },
+      { theme: 'SLA de Leads', text: 'Há algum objetivo informal de tempo de resposta para novos leads? O que acontece quando um lead não é contatado a tempo?' },
+      { theme: 'Aprovação de Exceções', text: 'Como é feita a aprovação quando uma vendedora solicita mais de 5% de desconto? Há registro dessas aprovações? Qual a frequência?' },
+    ]
+  },
+  {
+    id: 'anakarolina',
+    name: 'Ana Karolina S. Baldissera',
+    role: 'Analista de Backoffice',
+    area: 'Comercial — Supermercados',
+    email: 'vendas@duratto.com.br',
+    context: 'Você é responsável pelo back office de supermercados, controlando verbas de sell-in, promotores, sell-out e comissões de representantes. As perguntas abaixo buscam entender melhor esses controles.',
+    questions: [
+      { theme: 'Verbas de Investimento', text: 'Qual o volume mensal de verbas gerenciadas? Quais são os maiores clientes? Como são definidos os percentuais e quem os aprova?' },
+      { theme: 'Sell-out e Ruptura', text: 'Com que frequência você recebe os relatórios de estoque dos clientes? Qual cliente tem maior frequência de ruptura? Como você comunica isso internamente?' },
+      { theme: 'Sell-out → PCP', text: 'Atualmente o sell-out não alimenta o PCP. Na sua visão, quais produtos teriam mais impacto se essa integração existisse?' },
+      { theme: 'Reconciliação com Agência', text: 'Com qual frequência há inconsistências entre seu controle de promotores e os dados da agência? Como é feita a correção?' },
+      { theme: 'Comissões (Rotina 1249)', text: 'Qual o tempo médio gasto mensalmente no recálculo manual de comissões no Excel? Já houve divergência paga ao representante por erro nesse processo?' },
+    ]
+  },
+  {
+    id: 'bruna',
+    name: 'Bruna Vitória M. Lopes',
+    role: 'Auxiliar Administrativo',
+    area: 'Comercial — Home Centers',
+    email: 'comercial1@duratto.com.br',
+    context: 'Você é responsável pelo back office de Home Centers, atendendo 7 redes com portais e formatos de pedido distintos. As perguntas abaixo buscam entender melhor esses processos.',
+    questions: [
+      { theme: 'Volume e Portais', text: 'Quantos pedidos chegam por dia por portal? Qual é o portal com maior volume de problemas ou erros de entrada?' },
+      { theme: 'Planilhas de Cadastro HC', text: 'Cada HC tem uma planilha de cadastro diferente — quais campos divergem mais entre elas? Qual é o de maior complexidade?' },
+      { theme: 'Comissão de RCAs', text: 'Como é calculada a comissão dos RCAs de HC? É o mesmo processo da Kamila (metas de faturamento)? Qual o tempo médio para apuração?' },
+      { theme: 'Faturamento Diferenciado', text: 'O que é diferente no processo de faturamento de cada HC? Qual tem o processo mais complexo e por quê?' },
+      { theme: 'Metas de HC', text: 'Por que não há metas definidas por Home Center? Existe algum indicador informal de performance por rede?' },
+    ]
+  },
+  {
+    id: 'andre',
+    name: 'André Conceição',
+    role: 'Gestor Comercial e Projetos',
+    area: 'Televendas / BI',
+    email: 'andre.conceicao@duratto.com.br',
+    context: 'Você é responsável pela geração de relatórios comerciais e análises para a diretoria. As perguntas abaixo buscam entender o processo atual de extração de dados e as necessidades de BI.',
+    questions: [
+      { theme: 'Processo de Extração', text: 'Quais são os passos que você executa hoje para gerar os relatórios? De onde vêm os dados? Há algum que exige manipulação manual significativa?' },
+      { theme: 'Ferramentas de BI', text: 'Existe alguma ferramenta analítica sendo usada hoje (Power BI, Tableau, Excel avançado, Looker)? Quem mais na empresa gera relatórios além de você?' },
+      { theme: 'Margem e Rentabilidade', text: 'Como a diretoria acessa a análise de margem hoje? Com que frequência é atualizada e quem faz?' },
+      { theme: 'Dados Integrados', text: 'Se você pudesse cruzar dados comerciais com o financeiro e o fiscal, qual seria a análise mais valiosa que não consegue fazer hoje?' },
+      { theme: 'Dashboard Executivo', text: 'Que informações a diretoria pede com mais frequência via WhatsApp ou e-mail? Essas seriam as candidatas para um painel em tempo real?' },
+    ]
+  },
+  {
+    id: 'marel',
+    name: 'Marel Paredes',
+    role: 'Diretor de Vendas',
+    area: 'Vendas / Precificação',
+    email: 'marel@duratto.com.br',
+    context: 'Você é responsável pela precificação e análise de margem. As perguntas abaixo buscam entender melhor o processo atual e onde o sistema pode trazer mais valor.',
+    questions: [
+      { theme: 'Tempo Gasto em Margens', text: 'Quantas horas por mês você ou sua equipe dedicam ao cálculo e atualização das planilhas de custo e margem? Qual etapa é a mais demorada?' },
+      { theme: 'Estrutura das Planilhas', text: 'As planilhas de frete e insumos são mantidas por quem? Com que frequência são atualizadas? Qual o maior risco quando ficam desatualizadas?' },
+      { theme: 'Granularidade Desejada', text: 'Se a margem estivesse no sistema em tempo real, em qual granularidade você usaria: por pedido, por cliente, por produto, por segmento? Qual é mais crítico?' },
+      { theme: 'Comunicação de Preços', text: 'Como são comunicadas as mudanças de tabela de preços para as equipes de vendas e back office? Há atrasos ou ruídos nessa comunicação?' },
+      { theme: 'Tributos e DIFAL', text: 'Os tributos no cálculo de margem consideram DIFAL para vendas interestaduais? Como isso é tratado hoje?' },
+    ]
+  },
+  {
+    id: 'heloisa',
+    name: 'Heloisa Fernanda Rodrigues',
+    role: 'Assistente Financeiro',
+    area: 'Financeiro — A Receber',
+    email: 'financeiro1@duratto.com.br',
+    context: 'Você é responsável pelo contas a receber: boletos, cobrança, liberação de pedidos e abatimentos. As perguntas abaixo buscam entender melhor os pontos de atrito e oportunidades de melhoria.',
+    questions: [
+      { theme: 'Erros no Midas', text: 'Quais são os erros específicos que o banco Midas apresenta no CNAB? Com que frequência ocorrem? Já causaram baixas indevidas ou títulos não baixados?' },
+      { theme: 'Cobrança WhatsApp', text: 'Quantas cobranças você realiza por dia via WhatsApp? Há um template padronizado? Como você registra que o cliente foi acionado?' },
+      { theme: 'Liberação de Pedidos', text: 'Quantos pedidos ficam bloqueados por dia aguardando liberação financeira? Qual o tempo médio entre o pedido entrar e você liberar? Qual o maior gargalo?' },
+      { theme: 'Cartão (REDE)', text: 'Com que frequência clientes pagam via link de cartão? Qual é o atraso médio entre o pagamento e a baixa no sistema hoje?' },
+      { theme: 'Análise de Crédito', text: 'Quando você recebe uma solicitação de análise de crédito do televendas, qual é o tempo médio de resposta? Como você retorna o resultado para a vendedora?' },
+    ]
+  },
+  {
+    id: 'leticia',
+    name: 'Leticia Suzana L. dos Santos',
+    role: 'Supervisora Administrativa',
+    area: 'Financeiro — A Pagar / Crédito',
+    email: 'financeiro@duratto.com.br',
+    context: 'Você é responsável pelo contas a pagar, conciliação bancária, fluxo de caixa e análise de crédito. As perguntas abaixo buscam entender os processos e lacunas atuais.',
+    questions: [
+      { theme: 'DRE Gerencial', text: 'Como a diretoria acompanha o resultado financeiro hoje sem uma DRE? Qual relatório mais se aproxima disso? Quem monta e com qual frequência?' },
+      { theme: 'Alçada de Pagamentos', text: 'Há algum controle informal sobre o valor dos pagamentos antes de serem executados? Qual seria o limite acima do qual você gostaria de ter uma aprovação formal?' },
+      { theme: 'Conciliação Bancária', text: 'Quantos bancos são conciliados por dia? Qual o tempo médio gasto por banco? Quais situações geram mais dificuldade na conciliação?' },
+      { theme: 'Sistema de Folha (externo)', text: 'Qual é o sistema de folha de pagamento utilizado? Como é feita a integração hoje (arquivo, e-mail)? Qual é o prazo para envio das comissões ao RH?' },
+      { theme: 'Crédito — Variáveis Subjetivas', text: 'Além do SERASA, quais são as 3 variáveis mais importantes na análise de crédito de novos clientes? Como essas informações são registradas e consultadas depois?' },
+    ]
+  },
+  {
+    id: 'daianny',
+    name: 'Daianny P. Silveira',
+    role: 'Fiscal',
+    area: 'Fiscal / Compliance',
+    email: 'fiscal1@duratto.com.br',
+    context: 'Você é responsável pela área fiscal dos três CNPJs (HK, Duratto, DRT). As perguntas abaixo buscam detalhar obrigações acessórias, apuração de impostos e controles de tributação especial.',
+    questions: [
+      { theme: 'Obrigações Acessórias', text: 'Quais obrigações acessórias são geradas hoje? (SPED Fiscal, EFD Contribuições, SPED Contábil, ECF, GIA, PGDAS-D, outros?) Quem as gera — você ou a contabilidade?' },
+      { theme: 'Apuração de Impostos', text: 'Quais impostos são apurados internamente vs. pela contabilidade? (ICMS, IPI, PIS/COFINS, ISS, IRPJ, CSLL?) Há DIFAL? Para quais estados?' },
+      { theme: 'GNRE e Regimes Estaduais', text: 'Para os estados com regime especial (RJ, MG, AL, ES, DF): como são geradas as guias e o GNRE hoje? É feito por você ou pelo faturamento (Thiago)?' },
+      { theme: 'Excel de Tributação Diferenciada', text: 'Como é estruturada a planilha de controle de tributação diferenciada (monofásico e ST)? Com que frequência é atualizada e quem é o responsável?' },
+      { theme: 'Transferência para Contabilidade', text: 'Quais arquivos são enviados mensalmente para a contabilidade? (XMLs, SPED, relatórios específicos?) Via Drive — há uma pasta estruturada ou é ad hoc?' },
+    ]
+  },
+  {
+    id: 'felipe',
+    name: 'Felipe Furlan Fahl',
+    role: 'Coordenador de Produção',
+    area: 'Indústria / Produção',
+    email: 'felipe@duratto.com.br',
+    context: 'Você coordena produção, PCP, controle de qualidade e estocagem. As perguntas abaixo buscam entender os processos atuais de planejamento, controle de fórmulas e gestão de matéria-prima.',
+    questions: [
+      { theme: 'PCP e Demanda', text: 'Como você recebe hoje a informação de demanda de vendas para planejar a produção? Com que antecedência? Qual o maior problema quando a informação chega errada ou tarde?' },
+      { theme: 'Produtos Controlados', text: 'Quais produtos controlados a Duratto fabrica? Quais licenças são necessárias (ANVISA, Polícia Civil, Exército)? Qual o prazo para envio do relatório mensal e qual o risco em caso de atraso?' },
+      { theme: 'Gestão de Fórmulas', text: 'Quantas fórmulas/receitas existem no portfólio ativo? Como o técnico José Victor as documenta atualmente? Há controle de versões e aprovação formal antes de uma fórmula entrar em produção?' },
+      { theme: 'Laudos de MP', text: 'O que acontece quando uma MP chega sem laudo ou com laudo fora das especificações? O processo de quarentena é registrado de alguma forma?' },
+      { theme: 'Integração Estoque Real-Time', text: 'Você mencionou que a integração do estoque com compras/produção depende do fiscal para entrada das NFs. Qual é o atraso médio entre a entrada física de MP e a atualização no sistema?' },
+    ]
+  },
+  {
+    id: 'thiago',
+    name: 'Thiago L. M. Teodoro',
+    role: 'Coordenador de Logística',
+    area: 'Faturamento / Logística',
+    email: 'faturamento@duratto.com.br',
+    context: 'Você coordena o faturamento e a logística. As perguntas abaixo buscam detalhar processos de GNRE, transferências, roteirização e comprovação de entrega.',
+    questions: [
+      { theme: 'GNRE Nota a Nota', text: 'Quanto tempo leva a emissão de GNRE para um dia típico? Em quais estados há maior complexidade? Já houve autuação ou problema fiscal por GNRE emitida errada ou esquecida?' },
+      { theme: 'Transferências HK/Duratto', text: 'Na prática, como funciona a rotina 334? O que você precisa verificar antes de executar cada transferência? Há algum caso em que a transferência falha ou precisa ser revertida?' },
+      { theme: 'Roteirização', text: 'Como você define o roteiro hoje no Google Maps? Qual a maior dificuldade: janela de entrega, agendamento dos clientes ou volume por veículo? Há cliente com requisito de agendamento?' },
+      { theme: 'POD Digital', text: 'Qual o volume de canhotos arquivados por mês? Já houve disputa com cliente por entrega não comprovada? Qual seria o impacto de ter o POD digital no dia da entrega?' },
+      { theme: 'Discrepância de Estoque', text: 'O Felipe mencionou que a integração de estoque com produção depende do fiscal para entrada das NFs. Na sua visão de logística, quando uma NF de transferência é lançada, o estoque atualiza em tempo real ou há delay?' },
+    ]
+  },
+  {
+    id: 'carolina',
+    name: 'Carolina Cristina Ribeiro',
+    role: 'Faturista / Logística',
+    area: 'Logística',
+    email: 'compras@duratto.com',
+    context: 'Você atua no faturamento e logística, sendo responsável pelo mapa de separação, rotinas 930/949 e controle de EPIs. As perguntas abaixo buscam detalhar esses processos.',
+    questions: [
+      { theme: 'Mapa de Separação', text: 'Qual o volume médio de linhas no mapa de separação por dia? Qual produto tem mais erro de contagem entre caixas e frascos? Quanto tempo você gasta na soma manual?' },
+      { theme: 'Duplicados por Lote', text: 'Como você identifica itens duplicados do mesmo pedido por lote no faturamento de supermercados? Com que frequência isso acontece?' },
+      { theme: 'EPIs e Validade', text: 'Há controle de vencimento dos EPIs? Quem é responsável por informar quando o EPI precisa ser trocado por validade (não só por dano)?' },
+      { theme: 'Rotinas 930 e 949', text: 'Você mencionou ~1 min por pedido nas rotinas 930/949. Quais são os pedidos que demoram mais? Há algum tipo de pedido que costuma ter problema nessa etapa?' },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+const STORAGE_KEY = 'sietch_duratto_etapa2_questionario_v1';
+let currentRespondent = null;
+let answers = {};   // { rid: { q0:'', q1:'', ..., notes:'' } }
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+function init() {
+  loadData();
+  populateSelect();
+}
+
+function populateSelect() {
+  const sel = document.getElementById('selectRespondent');
+  respondents.forEach(r => {
+    const opt = document.createElement('option');
+    opt.value = r.id;
+    opt.textContent = `${r.name} — ${r.area}`;
+    sel.appendChild(opt);
+  });
+}
+
+function onSelectChange() {
+  const sel = document.getElementById('selectRespondent');
+  document.getElementById('btnStart').disabled = !sel.value;
+}
+
+// ═══════════════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════════════
+function loadData() {
+  try {
+    const d = localStorage.getItem(STORAGE_KEY);
+    if (d) answers = JSON.parse(d);
+  } catch(e) {}
+}
+
+function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); } catch(e) {}
+  showAutosave();
+}
+
+let autosaveTimer;
+function showAutosave() {
+  const el = document.getElementById('autosavePill');
+  el.classList.add('visible');
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(() => el.classList.remove('visible'), 2000);
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startQuestionnaire() {
+  const rid = document.getElementById('selectRespondent').value;
+  if (!rid) return;
+  currentRespondent = respondents.find(r => r.id === rid);
+  buildQuestionnaire();
+  showPage('pageQuestionnaire');
+}
+
+function goBack() {
+  if (confirm('Suas respostas estão salvas. Deseja trocar de respondente?')) {
+    showPage('pageLanding');
+  }
+}
+
+function goBackToQuestionnaire() {
+  showPage('pageQuestionnaire');
+}
+
+// ═══════════════════════════════════════════════════════
+// BUILD QUESTIONNAIRE
+// ═══════════════════════════════════════════════════════
+function getInitials(name) {
+  return name.split(' ').filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join('');
+}
+
+function buildQuestionnaire() {
+  const r = currentRespondent;
+  const rid = r.id;
+
+  // Header
+  document.getElementById('qAvatar').textContent = getInitials(r.name);
+  document.getElementById('qName').textContent = r.name;
+  document.getElementById('qRole').textContent = r.role;
+  document.getElementById('qArea').textContent = r.area;
+  document.getElementById('qContext').textContent = r.context;
+  document.getElementById('qProgressTotal').textContent = r.questions.length;
+  document.getElementById('qSectionCount').textContent = `${r.questions.length} perguntas`;
+
+  // Dots
+  const dotsEl = document.getElementById('qDots');
+  dotsEl.innerHTML = '';
+  r.questions.forEach((_, qi) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.id = `dot-${rid}-${qi}`;
+    dotsEl.appendChild(d);
+  });
+
+  // Cards
+  const cards = document.getElementById('qCards');
+  cards.innerHTML = '';
+  r.questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = `qcard-${rid}-${qi}`;
+    card.innerHTML = `
+      <div class="q-head">
+        <div class="q-num">${String(qi+1).padStart(2,'0')}</div>
+        <div class="q-body">
+          <div class="q-theme">${q.theme}</div>
+          <div class="q-text">${q.text}</div>
+        </div>
+        <div class="q-status" id="qstatus-${rid}-${qi}">
+          <span class="q-status-check">✓</span>
+        </div>
+      </div>
+      <textarea
+        class="q-textarea"
+        id="qtext-${rid}-${qi}"
+        placeholder="Escreva sua resposta aqui..."
+        oninput="handleAnswer('${rid}', ${qi}, this.value)"
+        rows="4"
+      ></textarea>
+      <div class="char-hint" id="qhint-${rid}-${qi}"></div>
+    `;
+    cards.appendChild(card);
+  });
+
+  // Free notes
+  const fn = document.getElementById('freeNotes');
+  fn.value = answers[rid]?.notes || '';
+
+  // Populate saved values
+  if (answers[rid]) {
+    r.questions.forEach((_, qi) => {
+      const ta = document.getElementById(`qtext-${rid}-${qi}`);
+      const val = answers[rid][`q${qi}`] || '';
+      if (ta && val) {
+        ta.value = val;
+        updateCardState(rid, qi, val);
+      }
+    });
+  }
+
+  updateProgress();
+}
+
+// ═══════════════════════════════════════════════════════
+// ANSWER HANDLERS
+// ═══════════════════════════════════════════════════════
+let saveTimer;
+function handleAnswer(rid, qi, value) {
+  if (!answers[rid]) answers[rid] = {};
+  answers[rid][`q${qi}`] = value;
+  updateCardState(rid, qi, value);
+  updateProgress();
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, 600);
+}
+
+function handleNotesChange(value) {
+  const rid = currentRespondent?.id;
+  if (!rid) return;
+  if (!answers[rid]) answers[rid] = {};
+  answers[rid].notes = value;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, 600);
+}
+
+function updateCardState(rid, qi, value) {
+  const card   = document.getElementById(`qcard-${rid}-${qi}`);
+  const dot    = document.getElementById(`dot-${rid}-${qi}`);
+  const hint   = document.getElementById(`qhint-${rid}-${qi}`);
+  const filled = value.trim().length > 0;
+
+  if (card) card.classList.toggle('answered', filled);
+  if (dot)  dot.classList.toggle('filled', filled);
+  if (hint && value.trim().length > 0) {
+    const wc = value.trim().split(/\s+/).length;
+    hint.textContent = `${wc} palavra${wc !== 1 ? 's' : ''}`;
+  } else if (hint) hint.textContent = '';
+}
+
+function updateProgress() {
+  const r   = currentRespondent;
+  const rid = r.id;
+  const filled = r.questions.filter((_, qi) => (answers[rid]?.[`q${qi}`] || '').trim()).length;
+
+  document.getElementById('qProgressCount').textContent = filled;
+
+  // Global progress bar
+  const pct = filled / r.questions.length * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  // Completion banner
+  const banner = document.getElementById('completionBanner');
+  banner.classList.toggle('visible', filled === r.questions.length);
+}
+
+// ═══════════════════════════════════════════════════════
+// EXPORT TXT
+// ═══════════════════════════════════════════════════════
+function exportTXT() {
+  const r   = currentRespondent;
+  const rid = r.id;
+  const now = new Date().toLocaleString('pt-BR');
+
+  let txt = '';
+  txt += '════════════════════════════════════════════════════════════\n';
+  txt += '  SIETCH COMMAND CENTER\n';
+  txt += '  Duratto — Levantamento de Requisitos — Etapa 2\n';
+  txt += '════════════════════════════════════════════════════════════\n\n';
+
+  txt += `Respondente : ${r.name}\n`;
+  txt += `Cargo       : ${r.role}\n`;
+  txt += `Área        : ${r.area}\n`;
+  txt += `E-mail      : ${r.email}\n`;
+  txt += `Exportado em: ${now}\n\n`;
+
+  txt += '────────────────────────────────────────────────────────────\n';
+  txt += '  PERGUNTAS E RESPOSTAS\n';
+  txt += '────────────────────────────────────────────────────────────\n\n';
+
+  r.questions.forEach((q, qi) => {
+    const ans = (answers[rid]?.[`q${qi}`] || '').trim();
+    txt += `[${String(qi+1).padStart(2,'0')}] ${q.theme.toUpperCase()}\n`;
+    txt += `\nPergunta:\n${q.text}\n\n`;
+    txt += `Resposta:\n${ans || '(não respondida)'}\n\n`;
+    txt += '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n';
+  });
+
+  const fn = (answers[rid]?.notes || '').trim();
+  if (fn) {
+    txt += '────────────────────────────────────────────────────────────\n';
+    txt += '  OBSERVAÇÕES ADICIONAIS\n';
+    txt += '────────────────────────────────────────────────────────────\n\n';
+    txt += fn + '\n\n';
+  }
+
+  txt += '════════════════════════════════════════════════════════════\n';
+  txt += '  Fim do documento\n';
+  txt += '  Sietch Tecnologias · sietch.tech\n';
+  txt += '════════════════════════════════════════════════════════════\n';
+
+  const filename = `duratto_etapa2_${rid}_${now.replace(/[/:,\s]/g,'-')}.txt`;
+  const blob = new Blob(['\uFEFF' + txt], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
+function exportAndFinish() {
+  saveData();
+  exportTXT();
+
+  // Show done page
+  const r = currentRespondent;
+  const rid = r.id;
+  const filled = r.questions.filter((_, qi) => (answers[rid]?.[`q${qi}`] || '').trim()).length;
+  document.getElementById('doneDesc').textContent =
+    `${r.name}, suas respostas foram exportadas com sucesso. ` +
+    (filled < r.questions.length
+      ? `Você respondeu ${filled} de ${r.questions.length} perguntas. O arquivo inclui tudo que foi preenchido até agora. Você pode voltar e completar o restante quando quiser.`
+      : 'Todas as perguntas foram respondidas. Por favor, envie o arquivo gerado para o time Sietch.');
+
+  showPage('pageDone');
+}
+
+// ═══════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
